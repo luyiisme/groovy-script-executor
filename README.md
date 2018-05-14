@@ -10,7 +10,7 @@
 ScriptEngine scriptEngine = new GroovyScriptEngine();
 //登记脚本
 /** "123" ruleId;
- *脚本内容里: context 表示脚本上下文对象; 可以在执行时传入参数map,比如后面,scriptEngine.invoke("123", params)
+ *脚本内容里: context 表示脚本上下文对象; 可以在执行时传入参数 map,比如后面,scriptEngine.invoke("123", params)
  *
  * context.name 执行结果: jack
  **/
