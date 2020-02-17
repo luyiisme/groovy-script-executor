@@ -1,17 +1,25 @@
-# 基于Groovy的脚步引擎
-目标：简化 groovy 作为运行时动态脚本场景的工作
-- 支持卸载老的脚本类（解决groovy类存在的无法卸载导致 FullGC 问题）;
-- 提供沙箱功能的拦截器支持，并且默认提供一些黑名单的Interceptors（
-比如，NoReflectionAllowedInterceptor，NoSystemExitInterceptor，实际使用建议白名单方式），
-- 提供执行上下文，方便在执行时传递执行参数；
-- 支持运行时登记和更新脚本内容；
+package io.github.luyiisme.script;
 
-# 用法
+import java.util.HashMap;
+import java.util.Map;
 
-```
+import io.github.luyiisme.script.groovy.GroovyScriptEngine;
+import io.github.luyiisme.script.management.ScriptManager;
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
+ * @author: kevin.luy@antfin.com
+ * @create: 2020-02-17 14:31
+ **/
+public class GroovyScriptEngineSandboxTest {
+
+    private ClassRecorder cr = new ClassRecorder();
+
+    @Test
+    public void testSandboxUsage() {
         //PHASE 1:脚本引擎初始化线程执行
         ScriptEngine scriptEngine = new GroovyScriptEngine();
-        //沙箱功能的拦截器:
         scriptEngine.addGroovyInterceptor(cr);
 
         //PHASE 2:脚本管理线程执行
@@ -31,4 +39,7 @@
 
         //PHASE 4:删除所有的脚本
         ((ScriptManager)scriptEngine).removeAllScript();
-```
+    }
+
+
+}

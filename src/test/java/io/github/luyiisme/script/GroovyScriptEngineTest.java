@@ -28,7 +28,7 @@ public class GroovyScriptEngineTest {
         //调用
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("name", "jack");
-        Assert.assertEquals(1, scriptEngine.invoke("123", params));
+        Assert.assertSame(1, scriptEngine.invoke("123", params));
 
         //删除所有的脚本
         ((ScriptManager) scriptEngine).removeAllScript();

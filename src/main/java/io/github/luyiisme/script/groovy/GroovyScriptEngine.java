@@ -1,15 +1,20 @@
 package io.github.luyiisme.script.groovy;
 
-import io.github.luyiisme.script.ScriptEngine;
-import io.github.luyiisme.script.management.DefaultScriptManager;
-import groovy.lang.Binding;
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.Script;
-
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
+import groovy.lang.Binding;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.Script;
+import io.github.luyiisme.script.ScriptEngine;
+import io.github.luyiisme.script.management.DefaultScriptManager;
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.kohsuke.groovy.sandbox.GroovyInterceptor;
+import org.kohsuke.groovy.sandbox.SandboxTransformer;
 
 /**
  * 客户端的脚本前提条件:
@@ -24,12 +29,29 @@ import java.util.Map;
 public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEngine {
 
     private final DefaultInvokeContext invokeContext = new DefaultInvokeContext();
-    public static final String         CONTEXT_KEY   = "context";
-    private final Binding              binding;
+    public static final String CONTEXT_KEY = "context";
+    private final Binding binding;
+    private CompilerConfiguration compilerConfiguration=new CompilerConfiguration();
+    private List<GroovyInterceptor> groovyInterceptors = new ArrayList<GroovyInterceptor>();
 
     public GroovyScriptEngine() {
         binding = new Binding();
         binding.setVariable(CONTEXT_KEY, invokeContext);
+        compilerConfiguration.addCompilationCustomizers(new SandboxTransformer());
+    }
+
+    @Override
+    public void setCompilerConfiguration(CompilerConfiguration cc) {
+        this.compilerConfiguration = cc;
+    }
+
+    public CompilerConfiguration getCompilerConfiguration() {
+        return compilerConfiguration;
+    }
+
+    @Override
+    public void addGroovyInterceptor(GroovyInterceptor groovyInterceptor) {
+        groovyInterceptors.add(groovyInterceptor);
     }
 
     @Override
@@ -38,7 +60,7 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
             .doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
                 @Override
                 public GroovyClassLoader run() {
-                    return new GroovyClassLoader(getClass().getClassLoader());
+                    return new GroovyClassLoader(getClass().getClassLoader(), compilerConfiguration);
                 }
             });
 
@@ -48,10 +70,10 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
             if (Script.class.isAssignableFrom(clazz)) {
                 try {
                     Constructor constructor = clazz.getConstructor(Binding.class);
-                    script = (Script) constructor.newInstance(binding);
+                    script = (Script)constructor.newInstance(binding);
                 } catch (Throwable e) {
                     // Fallback for non-standard "Script" classes.
-                    script = (Script) clazz.newInstance();
+                    script = (Script)clazz.newInstance();
                     script.setBinding(binding);
                 }
             } else {
@@ -71,8 +93,14 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
         Object scriptInstance = super.getScriptInstance(scriptId);
         try {
             invokeContext.setParams(scriptParams);
-            return (T) ((Script) scriptInstance).run();
+            for (GroovyInterceptor interceptor : groovyInterceptors) {
+                interceptor.register();
+            }
+            return (T)((Script)scriptInstance).run();
         } finally {
+            for (GroovyInterceptor interceptor : groovyInterceptors) {
+                interceptor.unregister();
+            }
             invokeContext.clear();
         }
     }

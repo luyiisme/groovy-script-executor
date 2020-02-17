@@ -3,6 +3,9 @@ package io.github.luyiisme.script;
 
 import java.util.Map;
 
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.kohsuke.groovy.sandbox.GroovyInterceptor;
+
 /**
  * @author luyi on 16/4/19.
  */
@@ -18,4 +21,7 @@ public interface ScriptEngine {
      */
     <T> T invoke(String scriptId, Map<String, Object> scriptParams);
 
+    void setCompilerConfiguration(CompilerConfiguration cc);
+
+    void addGroovyInterceptor(GroovyInterceptor groovyInterceptor);
 }
