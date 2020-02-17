@@ -12,7 +12,7 @@
         //PHASE 1:脚本引擎初始化线程执行
         ScriptEngine scriptEngine = new GroovyScriptEngine();
         //沙箱功能的拦截器:
-        scriptEngine.addGroovyInterceptor(cr);
+        scriptEngine.addGroovyInterceptor(new NoSystemExitInterceptor());
 
         //PHASE 2:脚本管理线程执行
         /** "123" 脚本Id;
