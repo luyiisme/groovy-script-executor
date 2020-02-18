@@ -21,7 +21,7 @@
 ```
 ```
         //PHASE 2:脚本管理线程执行
-        /** "123" 作为 scriptName;
+        /** "123" 作为 scriptName，登记入内存中;
          * 脚本内容里: context 表示脚本上下文对象,它对应于您在执行时传入参数 map,比如后面,scriptEngine.invoke("123", params)
          * context.name 执行结果: jack
          **/
@@ -36,7 +36,7 @@
 ```
 
 ```
-        //PHASE 4:删除所有的脚本
+        //PHASE 4:删除内存中所有的脚本
         ((ScriptManager)scriptEngine).removeAllScript();
 ```
 # 最佳实践
