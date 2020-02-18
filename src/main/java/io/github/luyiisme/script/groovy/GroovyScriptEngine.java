@@ -18,11 +18,12 @@ import org.kohsuke.groovy.sandbox.SandboxTransformer;
 
 /**
  * 客户端的脚本前提条件:
+ * 加入脚本作用于规则场景，那么
  * <p>
  * - 一个规则只有一个脚本;
  * - 每个规则的ID是唯一的;
  * <p>
- * scriptId 就必须使用 ruleId;
+ * scriptName 就必须使用 ruleId;
  *
  * @author luyi on 16/4/19.
  */
@@ -89,8 +90,8 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     }
 
     @Override
-    public <T> T invoke(String scriptId, Map<String, Object> scriptParams) {
-        Object scriptInstance = super.getScriptInstance(scriptId);
+    public <T> T invoke(String scriptName, Map<String, Object> scriptParams) {
+        Object scriptInstance = super.getScriptInstance(scriptName);
         try {
             invokeContext.setParams(scriptParams);
             for (GroovyInterceptor interceptor : groovyInterceptors) {
