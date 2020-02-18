@@ -31,8 +31,6 @@
         params.put("name", "jack");
         Integer v = scriptEngine.invoke("123", params);
         Assert.assertSame(1, v);
-        System.out.println(cr.toString());
-        Assert.assertTrue(cr.toString().contains("DefaultInvokeContext.name"));
 
         //PHASE 4:删除所有的脚本
         ((ScriptManager)scriptEngine).removeAllScript();
