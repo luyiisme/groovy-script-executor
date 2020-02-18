@@ -5,7 +5,7 @@
 
 详细 features:
 - 支持运行时基于 ScriptName 的在内存中登记和更新脚本内容，方便 ScriptName 标识不变情况下做脚本内容修改；
-- 防止发生常见的 FullGC 或 OOM 问题（Groovy 在动态脚本场景，容易因脚本过多对应 class无法正常卸载导致 FullGC的问题，网上该类问题很普遍）;
+- 解决常见的容易 FullGC 或 OOM 问题（Groovy 在动态脚本场景，容易因脚本过多对应 class无法正常卸载导致 FullGC的问题，网上该类问题很普遍）;
 - 提供沙箱功能，沙箱的限制控制能力通过拦截器支持，并默认提供一些黑名单的 GroovyInterceptors（
 比如，NoReflectionAllowedInterceptor，NoSystemExitInterceptor），特别限定的场景建议直接使用白名单方式；
 - 提供执行上下文，方便在执行时传递执行参数；
