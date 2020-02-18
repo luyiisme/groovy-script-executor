@@ -7,6 +7,7 @@
 - 提供沙箱功能，沙箱的限制控制能力通过拦截器支持，并默认提供一些黑名单的 GroovyInterceptors（
 比如，NoReflectionAllowedInterceptor，NoSystemExitInterceptor，实际使用建议白名单方式），
 - 提供执行上下文，方便在执行时传递执行参数；
+- TODO,提供脚本的 Repository，方便跟进开箱即用的方案；
 
 # 用法
 
