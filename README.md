@@ -9,6 +9,7 @@
 - 提供沙箱功能，沙箱的限制控制能力通过拦截器支持，并默认提供一些黑名单的 GroovyInterceptors（
 比如，NoReflectionAllowedInterceptor，NoSystemExitInterceptor），特别限定的场景建议直接使用白名单方式；
 - 提供执行上下文，方便在执行时传递执行参数；
+- 兼容支持JDK 1.6；
 - TODO,提供脚本的 Repository，方便作为个更开箱即用的方案；
 
 # 用法
@@ -38,6 +39,15 @@
 ```
         //PHASE 4:删除内存中所有的脚本
         ((ScriptManager)scriptEngine).removeAllScript();
+```
+# 依赖引入
+pom中依赖
+```
+<dependency>
+  <groupId>io.github.luyiisme</groupId>
+  <artifactId>groovy-script-executor</artifactId>
+  <version>${latest.version}</version>
+</dependency>
 ```
 # 最佳实践
 - 使用方可以自己维护个脚本的管理DB表；
