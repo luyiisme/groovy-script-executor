@@ -11,20 +11,14 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
 import io.github.luyiisme.script.ScriptEngine;
+import io.github.luyiisme.script.common.NoSuchScriptException;
 import io.github.luyiisme.script.management.DefaultScriptManager;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.kohsuke.groovy.sandbox.GroovyInterceptor;
 import org.kohsuke.groovy.sandbox.SandboxTransformer;
 
 /**
- * 客户端的脚本前提条件:
- * 加入脚本作用于规则场景，那么
- * <p>
- * - 一个规则只有一个脚本;
- * - 每个规则的ID是唯一的;
- * <p>
- * scriptName 就必须使用 ruleId;
- *
+ * 默认脚本引擎，需要初始化时先注册登记脚本，
  * @author luyi on 16/4/19.
  */
 public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEngine {
@@ -32,7 +26,7 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     private final DefaultInvokeContext invokeContext = new DefaultInvokeContext();
     public static final String CONTEXT_KEY = "context";
     private final Binding binding;
-    private CompilerConfiguration compilerConfiguration=new CompilerConfiguration();
+    private CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
     private List<GroovyInterceptor> groovyInterceptors = new ArrayList<GroovyInterceptor>();
 
     public GroovyScriptEngine() {
@@ -92,6 +86,9 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     @Override
     public <T> T invoke(String scriptName, Map<String, Object> scriptParams) {
         Object scriptInstance = super.getScriptInstance(scriptName);
+        if (scriptInstance == null) {
+            throw new NoSuchScriptException(scriptName);
+        }
         try {
             invokeContext.setParams(scriptParams);
             for (GroovyInterceptor interceptor : groovyInterceptors) {
