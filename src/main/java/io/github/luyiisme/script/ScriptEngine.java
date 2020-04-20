@@ -3,6 +3,7 @@ package io.github.luyiisme.script;
 
 import java.util.Map;
 
+import io.github.luyiisme.script.api.ScriptInvokeInterceptor;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.kohsuke.groovy.sandbox.GroovyInterceptor;
 
@@ -14,7 +15,7 @@ public interface ScriptEngine {
     /**
      * 执行入口
      *
-     * @param scriptName     脚本Id,
+     * @param scriptName   脚本Id,
      * @param scriptParams 脚本执行的参数[参数名--参数实例]
      * @param <T>          可以为null
      * @return
@@ -24,4 +25,6 @@ public interface ScriptEngine {
     void setCompilerConfiguration(CompilerConfiguration cc);
 
     void addGroovyInterceptor(GroovyInterceptor groovyInterceptor);
+
+    void addScriptInvokeInterceptor(ScriptInvokeInterceptor scriptInvokeInterceptor);
 }

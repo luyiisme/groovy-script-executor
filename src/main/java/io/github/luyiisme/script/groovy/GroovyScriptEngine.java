@@ -11,6 +11,7 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.Script;
 import io.github.luyiisme.script.ScriptEngine;
+import io.github.luyiisme.script.api.ScriptInvokeInterceptor;
 import io.github.luyiisme.script.common.NoSuchScriptException;
 import io.github.luyiisme.script.management.DefaultScriptManager;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -19,6 +20,7 @@ import org.kohsuke.groovy.sandbox.SandboxTransformer;
 
 /**
  * 默认脚本引擎，需要初始化时先注册登记脚本，
+ *
  * @author luyi on 16/4/19.
  */
 public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEngine {
@@ -28,6 +30,7 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     private final Binding binding;
     private CompilerConfiguration compilerConfiguration = new CompilerConfiguration();
     private List<GroovyInterceptor> groovyInterceptors = new ArrayList<GroovyInterceptor>();
+    private List<ScriptInvokeInterceptor> scriptInvokeInterceptors = new ArrayList<ScriptInvokeInterceptor>();
 
     public GroovyScriptEngine() {
         binding = new Binding();
@@ -47,6 +50,11 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     @Override
     public void addGroovyInterceptor(GroovyInterceptor groovyInterceptor) {
         groovyInterceptors.add(groovyInterceptor);
+    }
+
+    @Override
+    public void addScriptInvokeInterceptor(ScriptInvokeInterceptor scriptInvokeInterceptor) {
+        scriptInvokeInterceptors.add(scriptInvokeInterceptor);
     }
 
     @Override
@@ -89,6 +97,9 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
         if (scriptInstance == null) {
             throw new NoSuchScriptException(scriptName);
         }
+
+        postProcessScriptInvocation(scriptName, scriptInstance, scriptParams);
+
         try {
             invokeContext.setParams(scriptParams);
             for (GroovyInterceptor interceptor : groovyInterceptors) {
@@ -100,6 +111,17 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
                 interceptor.unregister();
             }
             invokeContext.clear();
+        }
+    }
+
+    private void postProcessScriptInvocation(String scriptName, Object scriptInstance,
+        Map<String, Object> scriptParams) {
+        try {
+            for (ScriptInvokeInterceptor invokeInterceptor : scriptInvokeInterceptors) {
+                invokeInterceptor.preHandle(scriptName, scriptInstance, scriptParams);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("script invoke interceptors err!", e);
         }
     }
 
