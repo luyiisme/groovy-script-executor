@@ -97,7 +97,6 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
         if (scriptInstance == null) {
             throw new NoSuchScriptException(scriptName);
         }
-
         postProcessScriptInvocation(scriptName, scriptInstance, scriptParams);
 
         try {
