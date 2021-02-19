@@ -14,6 +14,7 @@ import io.github.luyiisme.script.ScriptEngine;
 import io.github.luyiisme.script.api.ScriptInvokeInterceptor;
 import io.github.luyiisme.script.common.NoSuchScriptException;
 import io.github.luyiisme.script.management.DefaultScriptManager;
+import io.github.luyiisme.script.sandbox.RejectASTTransformsCustomizer;
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.kohsuke.groovy.sandbox.GroovyInterceptor;
 import org.kohsuke.groovy.sandbox.SandboxTransformer;
@@ -35,7 +36,7 @@ public class GroovyScriptEngine extends DefaultScriptManager implements ScriptEn
     public GroovyScriptEngine() {
         binding = new Binding();
         binding.setVariable(CONTEXT_KEY, invokeContext);
-        compilerConfiguration.addCompilationCustomizers(new SandboxTransformer());
+        compilerConfiguration.addCompilationCustomizers(new RejectASTTransformsCustomizer(), new SandboxTransformer());
     }
 
     @Override
