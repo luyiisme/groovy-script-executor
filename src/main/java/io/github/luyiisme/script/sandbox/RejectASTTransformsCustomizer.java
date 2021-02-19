@@ -94,7 +94,7 @@ public class RejectASTTransformsCustomizer extends CompilationCustomizer {
                 for (String blockedAnnotation : getBlockedTransforms()) {
                     if (blockedAnnotation.equals(node.getType().getName()) || blockedAnnotation.endsWith(
                         "." + node.getType().getName())) {
-                        throw new UnsupportedOperationException("Insecure annotation '" + node.getType().getName() +
+                        throw new SecurityException("Insecure annotation '" + node.getType().getName() +
                             "' you can tweak the security sandbox to allow it. Read more about this in the " +
                             "documentation.");
                     }
@@ -113,7 +113,7 @@ public class RejectASTTransformsCustomizer extends CompilationCustomizer {
                 for (String blockedAnnotation : getBlockedTransforms()) {
                     if (blockedAnnotation.equals(an.getClassNode().getName()) || blockedAnnotation.endsWith(
                         "." + an.getClassNode().getName())) {
-                        throw new UnsupportedOperationException("Insecure annotation '" + an.getClassNode().getName() +
+                        throw new SecurityException("Insecure annotation '" + an.getClassNode().getName() +
                             "' you can tweak the security sandbox to allow it. Read more about this in the " +
                             "documentation.");
                     }
