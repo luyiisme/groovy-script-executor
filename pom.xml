@@ -5,7 +5,7 @@
     <groupId>io.github.luyiisme</groupId>
     <artifactId>groovy-script-executor</artifactId>
     <packaging>jar</packaging>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <name>groovy-script-executor</name>
     <url>https://github.com/luyiisme/groovy-script-executor</url>
     <description>groovy 动态脚本工具</description>
